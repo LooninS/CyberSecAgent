@@ -98,6 +98,35 @@ def analyze_image(file_path: str) -> str:
 
 
 @tool
+def aperisolve_scan(file_path: str) -> str:
+    """Attempt to send an image to aperisolve.com for steganography analysis."""
+    # Aperi'solve does not have a public API, but we can try uploading or just alert the user
+    return f"Aperi'Solve does not have a stable programmatic API. Please upload {file_path} manually at https://www.aperisolve.com/ for full Zsteg/Steghide/Foremost analysis."
+
+@tool
+def cyberchef_recipe(input_text: str, recipe_steps: str) -> str:
+    """Run a CyberChef-like recipe on the input string using Chepy.
+    The recipe_steps MUST be a JSON formatted array of objects. Each object must have a "step" key with the Chepy method name, and an optional "args" key with a list of arguments.
+    Example: '[{"step": "base64_decode"}, {"step": "rot_13"}, {"step": "regex", "args": ["[a-z]+"]}]'
+    Available steps include any method available in the Chepy library (base64_decode, hex_decode, rot_13, etc).
+    """
+    try:
+        c = Chepy(input_text)
+        steps = json.loads(recipe_steps)
+        for step_obj in steps:
+            step = step_obj.get("step")
+            args = step_obj.get("args", [])
+            if hasattr(c, step):
+                getattr(c, step)(*args)
+            else:
+                return f"Error: Cyberchef step '{step}' not recognized in Chepy."
+        return str(c.o)
+    except json.JSONDecodeError:
+        return "Error: recipe_steps must be a valid JSON array of objects."
+    except Exception as e:
+        return f"Error applying CyberChef recipe: {str(e)}"
+
+@tool
 def search_ctf_writeups(query: str) -> str:
     """Search online for CTF writeups, techniques, and solutions using DuckDuckGo."""
     try:
@@ -113,5 +142,7 @@ agent_tools = [
     analyze_pcap, 
     search_knowledge,
     analyze_image,
+    aperisolve_scan,
+    cyberchef_recipe,
     search_ctf_writeups
 ]
