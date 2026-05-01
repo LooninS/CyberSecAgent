@@ -10,3 +10,9 @@ duckduckgo-search
 bs4
 fastapi
 uvicorn
+pwntools
+unsloth
+datasets
+peft
+transformers
+torch

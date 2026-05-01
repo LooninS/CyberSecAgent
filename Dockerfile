@@ -7,6 +7,14 @@ RUN apt-get update && apt-get install -y \
     binwalk \
     binutils \
     curl \
+    hashcat \
+    john \
+    steghide \
+    radare2 \
+    strace \
+    ltrace \
+    jq \
+    smbclient \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app

@@ -10,7 +10,9 @@ from langchain_community.tools import DuckDuckGoSearchRun
 from chepy import Chepy
 
 @tool
-def execute_command(command: str) -> str:
+def execute_comm
+￼Review Changes
+and(command: str) -> str:
     """Execute a local shell command and return the output. Useful for recon, reading files, etc."""
     try:
         result = subprocess.run(command, shell=True, capture_output=True, text=True, timeout=60)
