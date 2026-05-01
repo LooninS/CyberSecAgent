@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Neural Link Console - Ghost Protocol</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "outline": "#849495",
+                        "secondary-fixed-dim": "#ecb1ff",
+                        "outline-variant": "#3b494b",
+                        "surface-tint": "#00dbe9",
+                        "primary-container": "#00f0ff",
+                        "on-background": "#dce1ff",
+                        "inverse-surface": "#dce1ff",
+                        "on-primary-fixed": "#002022",
+                        "tertiary": "#f8f4ff",
+                        "on-tertiary-fixed": "#1b1b23",
+                        "on-tertiary": "#302f39",
+                        "surface-container-high": "#232941",
+                        "surface-container-highest": "#2d344c",
+                        "error": "#ffb4ab",
+                        "surface": "#0b1229",
+                        "on-secondary-fixed-variant": "#75009e",
+                        "tertiary-fixed": "#e4e1ed",
+                        "surface-bright": "#323851",
+                        "inverse-primary": "#006970",
+                        "primary-fixed-dim": "#00dbe9",
+                        "inverse-on-surface": "#292f47",
+                        "background": "#0b1229",
+                        "surface-container": "#181e36",
+                        "secondary-container": "#d05bff",
+                        "on-error-container": "#ffdad6",
+                        "on-surface": "#dce1ff",
+                        "on-secondary-container": "#480063",
+                        "on-error": "#690005",
+                        "secondary-fixed": "#f9d8ff",
+                        "error-container": "#93000a",
+                        "on-secondary": "#520070",
+                        "surface-variant": "#2d344c",
+                        "secondary": "#ecb1ff",
+                        "surface-container-low": "#141a31",
+                        "on-surface-variant": "#b9cacb",
+                        "on-primary": "#00363a",
+                        "on-tertiary-fixed-variant": "#47464f",
+                        "surface-container-lowest": "#060d23",
+                        "on-primary-container": "#006970",
+                        "tertiary-container": "#dbd8e4",
+                        "primary": "#dbfcff",
+                        "tertiary-fixed-dim": "#c8c5d1",
+                        "on-tertiary-container": "#5f5e68",
+                        "on-primary-fixed-variant": "#004f54",
+                        "surface-dim": "#0b1229",
+                        "on-secondary-fixed": "#320046",
+                        "primary-fixed": "#7df4ff"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    spacing: {
+                        "terminal-gap": "8px",
+                        "margin": "24px",
+                        "gutter": "16px",
+                        "grid-unit": "4px"
+                    },
+                    fontFamily: {
+                        "label-caps": ["Space Grotesk"],
+                        "headline-md": ["Space Grotesk"],
+                        "body-main": ["Space Grotesk"],
+                        "terminal-code": ["Space Grotesk"],
+                        "headline-lg": ["Space Grotesk"]
+                    },
+                    fontSize: {
+                        "label-caps": ["11px", { lineHeight: "1", letterSpacing: "0.2em", fontWeight: "700" }],
+                        "headline-md": ["24px", { lineHeight: "1.2", letterSpacing: "-0.02em", fontWeight: "600" }],
+                        "body-main": ["16px", { lineHeight: "1.5", letterSpacing: "0em", fontWeight: "300" }],
+                        "terminal-code": ["14px", { lineHeight: "1.6", letterSpacing: "0.05em", fontWeight: "300" }],
+                        "headline-lg": ["42px", { lineHeight: "1.1", letterSpacing: "-0.05em", fontWeight: "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .scanlines {
+            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.05) 50%, rgba(0,0,0,0.05));
+            background-size: 100% 4px;
+        }
+        .glitch-border {
+            position: relative;
+        }
+        .glitch-border::before {
+            content: '';
+            position: absolute;
+            top: -1px; left: -1px; right: -1px; bottom: -1px;
+            border: 1px solid theme('colors.secondary-fixed-dim');
+            z-index: -1;
+            opacity: 0.2;
+            transform: translate(1px, 1px);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-main h-screen flex flex-col overflow-hidden scanlines">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center w-full px-6 py-3 bg-slate-950/20 backdrop-blur-xl font-['Space_Grotesk'] tracking-tighter uppercase docked full-width top-0 border-b border-cyan-500/10 shadow-[0_4px_30px_rgba(0,0,0,0.3)] z-50 shrink-0">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-cyan-400 opacity-70">terminal</span>
+<span class="text-cyan-400 font-bold text-lg tracking-[0.25em] drop-shadow-[0_0_12px_rgba(0,240,255,0.3)] opacity-80">GHOST_PROTOCOL // v3.1.0</span>
+</div>
+<!-- Navigation (Web) -->
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-cyan-400/80 scale-105 hover:text-cyan-300 hover:bg-cyan-500/5 transition-all duration-300 flex items-center gap-2" href="#">
+<span class="material-symbols-outlined text-sm">dashboard</span> TERML
+            </a>
+<a class="text-slate-500/70 hover:text-cyan-300/80 hover:bg-cyan-500/5 transition-all duration-300 flex items-center gap-2" href="#">
+<span class="material-symbols-outlined text-sm">radar</span> INTEL
+            </a>
+<a class="text-slate-500/70 hover:text-cyan-300/80 hover:bg-cyan-500/5 transition-all duration-300 flex items-center gap-2" href="#">
+<span class="material-symbols-outlined text-sm">visibility_off</span> STEALTH
+            </a>
+<a class="text-slate-500/70 hover:text-cyan-300/80 hover:bg-cyan-500/5 transition-all duration-300 flex items-center gap-2" href="#">
+<span class="material-symbols-outlined text-sm">monitoring</span> DIAGS
+            </a>
+<a class="text-slate-500/70 hover:text-cyan-300/80 hover:bg-cyan-500/5 transition-all duration-300 flex items-center gap-2" href="#">
+<span class="material-symbols-outlined text-sm">history</span> LOGS
+            </a>
+</nav>
+<span class="material-symbols-outlined text-cyan-400/50">settings_input_component</span>
+</header>
+<!-- Main Workspace Layout -->
+<div class="flex flex-1 overflow-hidden">
+<!-- Sidebar Controls -->
+<aside class="w-80 border-r border-cyan-500/10 bg-surface-container/10 backdrop-blur-3xl p-margin flex flex-col gap-margin overflow-y-auto shrink-0 hidden lg:flex">
+<!-- Telemetry Chip -->
+<div class="bg-surface-container-high/30 border border-outline-variant/20 rounded p-4 flex items-center gap-3">
+<div class="w-2 h-2 rounded-full bg-secondary-fixed shadow-[0_0_12px_theme('colors.secondary-fixed')] animate-pulse"></div>
+<div>
+<div class="font-label-caps text-label-caps text-on-surface-variant/70">UPLINK STATUS</div>
+<div class="font-terminal-code text-terminal-code text-secondary-fixed opacity-90">SILENT / UNDETECTED</div>
+</div>
+</div>
+<!-- Mission Controls -->
+<div class="space-y-4">
+<h3 class="font-label-caps text-label-caps text-primary-fixed-dim/70 border-b border-cyan-500/10 pb-2">STEALTH PROTOCOLS</h3>
+<button class="w-full bg-transparent border border-outline-variant/30 hover:bg-secondary-container/10 hover:border-secondary hover:text-secondary text-on-surface/80 py-3 px-4 rounded flex justify-between items-center transition-all duration-300 group">
+<span class="font-terminal-code text-terminal-code">SCRAMBLE_SIGNATURE</span>
+<span class="material-symbols-outlined group-hover:animate-pulse opacity-50 group-hover:opacity-100">blur_on</span>
+</button>
+<button class="w-full bg-transparent border border-outline-variant/30 hover:bg-primary-container/10 hover:border-primary-container hover:text-primary-container text-on-surface/80 py-3 px-4 rounded flex justify-between items-center transition-all duration-300 group">
+<span class="font-terminal-code text-terminal-code">WIPE_FOOTPRINT</span>
+<span class="material-symbols-outlined group-hover:animate-pulse opacity-50 group-hover:opacity-100">delete_sweep</span>
+</button>
+<button class="w-full bg-transparent border border-outline-variant/30 hover:bg-primary-container/10 hover:border-primary-container hover:text-primary-container text-on-surface/80 py-3 px-4 rounded flex justify-between items-center transition-all duration-300 group">
+<span class="font-terminal-code text-terminal-code">ENGAGE_VOID_MODE</span>
+<span class="material-symbols-outlined group-hover:animate-pulse opacity-50 group-hover:opacity-100">dark_mode</span>
+</button>
+</div>
+<!-- Encryption Log -->
+<div class="flex-1 min-h-0 flex flex-col">
+<h3 class="font-label-caps text-label-caps text-primary-fixed-dim/70 border-b border-cyan-500/10 pb-2 mb-4">OBFUSCATION THREADS</h3>
+<div class="flex-1 overflow-y-auto font-terminal-code text-terminal-code text-on-surface-variant/60 space-y-2 pr-2">
+<div class="hover:bg-secondary-container/5 px-2 py-1 flex justify-between border-l border-transparent hover:border-secondary transition-colors cursor-default">
+<span>&gt; Route 0x4A...</span><span class="text-secondary-fixed/80">MASKED</span>
+</div>
+<div class="hover:bg-secondary-container/5 px-2 py-1 flex justify-between border-l border-transparent hover:border-secondary transition-colors cursor-default">
+<span>&gt; Route 0x4B...</span><span class="text-secondary-fixed/80">MASKED</span>
+</div>
+<div class="hover:bg-secondary-container/5 px-2 py-1 flex justify-between border-l border-error/50 hover:border-error transition-colors cursor-default bg-error/5 text-error/80">
+<span>&gt; Route 0x4C...</span><span>EXPOSED</span>
+</div>
+<div class="hover:bg-secondary-container/5 px-2 py-1 flex justify-between border-l border-transparent hover:border-secondary transition-colors cursor-default">
+<span>&gt; Route 0x4D...</span><span class="text-outline/70">ROUTING</span>
+</div>
+<div class="hover:bg-secondary-container/5 px-2 py-1 flex justify-between border-l border-transparent hover:border-secondary transition-colors cursor-default">
+<span>&gt; Route 0x4E...</span><span class="text-outline/70">ROUTING</span>
+</div>
+</div>
+</div>
+</aside>
+<!-- Central Canvas -->
+<main class="flex-1 p-margin overflow-y-auto">
+<div class="grid grid-cols-1 xl:grid-cols-3 gap-margin h-full">
+<!-- Main Neural Visualization (Spans 2 columns on XL) -->
+<div class="xl:col-span-2 glitch-border bg-surface-container/10 backdrop-blur-[60px] border border-outline-variant/20 rounded flex flex-col overflow-hidden min-h-[500px]">
+<div class="p-4 border-b border-outline-variant/20 flex justify-between items-center bg-surface-container-high/20">
+<span class="font-label-caps text-label-caps text-primary-container/80 tracking-[0.2em]">VOID_STATE_MATRIX</span>
+<div class="flex gap-2 opacity-60">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary-fixed animate-pulse"></span>
+<span class="w-1.5 h-1.5 rounded-full bg-secondary-fixed animate-pulse" style="animation-delay: 200ms;"></span>
+<span class="w-1.5 h-1.5 rounded-full bg-secondary-fixed animate-pulse" style="animation-delay: 400ms;"></span>
+</div>
+</div>
+<div class="flex-1 relative p-4 flex items-center justify-center">
+<div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary-container/5 via-background to-background opacity-40 z-0"></div>
+<!-- Placeholder for 3D Visualization -->
+<img alt="Neural Network Visualization" class="w-full h-full object-cover opacity-30 mix-blend-screen z-10 absolute inset-0 filter hue-rotate-15 contrast-125" data-alt="A highly detailed 3D abstract visualization of a neural network artificial intelligence core. Glowing cyan and vibrant violet connection nodes float in a dark, midnight navy digital void. Thin, intricate light lines connect the floating geometric structures, creating a complex web of data transmission. The aesthetic is purely cyberpunk glassmorphism, with sharp contrasts, internal refraction, and a clean-room technological atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBUSIGXjXWrzWNtPJZtHd4qle-0PRL1lH-UdYhyCEXdn3IO_eI36nAwjGGWQndBOVd_1-GN1CJmve6niU5v297JB7oJXV-IUOIurWUqXPD2ARE9YRbXUFIuWd_kg5U9RZFLcALTcGp0b-HyKmpGtTMtPYbKVMjbEpifq79m2Xf1o5MTlcrE-H4BhFc1h__uve1LUH0uUJe-clhqjNu9gxqSThXD7ItcZv7Y1_JMLBTv9nUm50fyQ7rHNitzyEYa5v9C9GGaXJLJwpqL"/>
+<!-- HUD Overlay -->
+<div class="z-20 absolute bottom-4 left-4 font-terminal-code text-terminal-code text-primary-fixed/80 bg-surface-container-highest/40 p-3 border border-primary-container/20 backdrop-blur-xl rounded-sm text-xs">
+                            PHANTOM_SYNC: 99.9% <br/>
+                            SIG_NOISE_RATIO: 0.02
+                        </div>
+</div>
+</div>
+<!-- Process Monitoring Grid -->
+<div class="flex flex-col gap-margin h-full">
+<!-- Core Temp / Load -->
+<div class="bg-surface-container/10 backdrop-blur-3xl border border-outline-variant/20 rounded p-6 flex flex-col gap-4">
+<h3 class="font-label-caps text-label-caps text-on-surface-variant/70 border-b border-cyan-500/10 pb-2">STEALTH_METRICS</h3>
+<div class="space-y-5">
+<div>
+<div class="flex justify-between font-terminal-code text-terminal-code mb-2 text-sm">
+<span class="text-on-surface/80">INVISIBILITY_INDEX</span>
+<span class="text-primary-container">99.8%</span>
+</div>
+<div class="h-[2px] w-full bg-surface-container-highest/50 overflow-hidden relative">
+<div class="absolute top-0 left-0 h-full bg-primary-container w-[99.8%] shadow-[0_0_12px_theme('colors.primary-container')] opacity-80"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between font-terminal-code text-terminal-code mb-2 text-sm">
+<span class="text-on-surface/80">TRACE_RISK</span>
+<span class="text-secondary-fixed">1.2%</span>
+</div>
+<div class="h-[2px] w-full bg-surface-container-highest/50 overflow-hidden relative">
+<div class="absolute top-0 left-0 h-full bg-secondary-fixed w-[1.2%] shadow-[0_0_12px_theme('colors.secondary-fixed')] opacity-80"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Active Nodes -->
+<div class="flex-1 bg-surface-container/10 backdrop-blur-3xl border border-outline-variant/20 rounded p-6 flex flex-col min-h-[300px]">
+<h3 class="font-label-caps text-label-caps text-on-surface-variant/70 border-b border-cyan-500/10 pb-2 mb-4">GHOST_PROXIES</h3>
+<div class="flex-1 overflow-y-auto space-y-2 font-terminal-code text-terminal-code text-sm">
+<div class="flex items-center gap-4 p-2 hover:bg-surface-container-high/30 transition-colors group rounded-sm border border-transparent hover:border-outline-variant/20">
+<span class="material-symbols-outlined text-primary-container/80 text-[18px] group-hover:animate-pulse">vpn_lock</span>
+<div class="flex-1">
+<div class="text-on-surface/90">PROXY_ONION_1</div>
+<div class="text-outline/60 text-[11px] font-light">185.104.x.x</div>
+</div>
+<span class="text-primary-fixed-dim/80 text-[11px] tracking-widest">ACTIVE</span>
+</div>
+<div class="flex items-center gap-4 p-2 hover:bg-surface-container-high/30 transition-colors group rounded-sm border border-transparent hover:border-outline-variant/20">
+<span class="material-symbols-outlined text-secondary-fixed/80 text-[18px] group-hover:animate-pulse">route</span>
+<div class="flex-1">
+<div class="text-on-surface/90">PROXY_SHADOW_2</div>
+<div class="text-outline/60 text-[11px] font-light">45.22.x.x</div>
+</div>
+<span class="text-secondary-fixed-dim/80 text-[11px] tracking-widest">BOUNCING</span>
+</div>
+<div class="flex items-center gap-4 p-2 bg-error/5 border border-error/20 group rounded-sm">
+<span class="material-symbols-outlined text-error/80 text-[18px]">warning</span>
+<div class="flex-1">
+<div class="text-error/90">PROXY_PHANTOM_3</div>
+<div class="text-error/50 text-[11px] font-light">COMPROMISED</div>
+</div>
+<span class="text-error/80 animate-pulse text-[11px] tracking-widest">BURNED</span>
+</div>
+<div class="flex items-center gap-4 p-2 hover:bg-surface-container-high/30 transition-colors group rounded-sm border border-transparent hover:border-outline-variant/20">
+<span class="material-symbols-outlined text-primary-container/80 text-[18px] group-hover:animate-pulse">vpn_lock</span>
+<div class="flex-1">
+<div class="text-on-surface/90">PROXY_ECHO_4</div>
+<div class="text-outline/60 text-[11px] font-light">204.14.x.x</div>
+</div>
+<span class="text-primary-fixed-dim/80 text-[11px] tracking-widest">ACTIVE</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- BottomNavBar (Mobile) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center h-16 bg-black/90 border-t border-cyan-500/10 shadow-[0_-2px_20px_rgba(0,0,0,0.5)] z-50 bg-slate-950/60 backdrop-blur-3xl font-['Space_Grotesk'] text-[10px] font-bold tracking-widest">
+<a class="flex flex-col items-center justify-center text-cyan-400/80 before:content-['['] after:content-[']'] before:text-cyan-500/50 after:text-cyan-500/50 px-4 py-2 drop-shadow-[0_0_8px_rgba(0,240,255,0.4)] transform translate-y-[-2px] transition-transform hover:bg-cyan-500/5 hover:text-cyan-200" href="#">
+<span class="material-symbols-outlined mb-1 text-sm">dashboard</span>
+            TERML
+        </a>
+<a class="flex flex-col items-center justify-center text-slate-500 px-4 py-2 opacity-70 hover:bg-cyan-500/5 hover:text-cyan-200 transition-colors" href="#">
+<span class="material-symbols-outlined mb-1 text-sm">radar</span>
+            INTEL
+        </a>
+<a class="flex flex-col items-center justify-center text-slate-500 px-4 py-2 opacity-70 hover:bg-cyan-500/5 hover:text-cyan-200 transition-colors" href="#">
+<span class="material-symbols-outlined mb-1 text-sm">visibility_off</span>
+            STLTH
+        </a>
+<a class="flex flex-col items-center justify-center text-slate-500 px-4 py-2 opacity-70 hover:bg-cyan-500/5 hover:text-cyan-200 transition-colors" href="#">
+<span class="material-symbols-outlined mb-1 text-sm">monitoring</span>
+            DIAGS
+        </a>
+<a class="flex flex-col items-center justify-center text-slate-500 px-4 py-2 opacity-70 hover:bg-cyan-500/5 hover:text-cyan-200 transition-colors" href="#">
+<span class="material-symbols-outlined mb-1 text-sm">history</span>
+            LOGS
+        </a>
+</nav>
+</body></html>

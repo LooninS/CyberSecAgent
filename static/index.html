@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>CyberSec Agent // Ghost Protocol</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+    <!-- TopAppBar -->
+    <header id="topBar">
+        <div class="header-left">
+            <span class="material-symbols-outlined header-icon">terminal</span>
+            <span class="header-title">CYBERSEC_AGENT // V4.0.1</span>
+        </div>
+        <nav class="header-nav">
+            <a href="#" class="nav-link active" data-tab="terml">
+                <span class="material-symbols-outlined">dashboard</span> TERML
+            </a>
+            <a href="#" class="nav-link" data-tab="intel">
+                <span class="material-symbols-outlined">radar</span> INTEL
+            </a>
+            <a href="#" class="nav-link" data-tab="stealth">
+                <span class="material-symbols-outlined">visibility_off</span> STEALTH
+            </a>
+            <a href="#" class="nav-link" data-tab="diags">
+                <span class="material-symbols-outlined">monitoring</span> DIAGS
+            </a>
+            <a href="#" class="nav-link" data-tab="logs">
+                <span class="material-symbols-outlined">history</span> LOGS
+            </a>
+        </nav>
+        <span class="material-symbols-outlined header-settings">settings_input_component</span>
+    </header>
+
+    <!-- Main Workspace Layout -->
+    <div class="workspace">
+
+        <!-- Sidebar Controls -->
+        <aside class="sidebar" id="sidebar">
+            <!-- Telemetry Chip -->
+            <div class="telemetry-chip">
+                <div class="status-led online"></div>
+                <div>
+                    <div class="label-caps">UPLINK STATUS</div>
+                    <div class="terminal-code accent-primary">SECURE / ENCRYPTED</div>
+                </div>
+            </div>
+
+            <!-- Agent Tools -->
+            <div class="sidebar-section">
+                <h3 class="section-title">AGENT_TOOLS</h3>
+                <button class="tool-btn" data-tool="execute_command">
+                    <span class="terminal-code">EXECUTE_CMD</span>
+                    <span class="material-symbols-outlined">terminal</span>
+                </button>
+                <button class="tool-btn" data-tool="run_nmap_scan">
+                    <span class="terminal-code">NMAP_SCAN</span>
+                    <span class="material-symbols-outlined">radar</span>
+                </button>
+                <button class="tool-btn" data-tool="analyze_pcap">
+                    <span class="terminal-code">PCAP_ANALYZE</span>
+                    <span class="material-symbols-outlined">lan</span>
+                </button>
+                <button class="tool-btn" data-tool="analyze_image">
+                    <span class="terminal-code">IMAGE_FORENSICS</span>
+                    <span class="material-symbols-outlined">image_search</span>
+                </button>
+                <button class="tool-btn" data-tool="cyberchef_recipe">
+                    <span class="terminal-code">CYBERCHEF</span>
+                    <span class="material-symbols-outlined">auto_fix_high</span>
+                </button>
+                <button class="tool-btn" data-tool="search_ctf_writeups">
+                    <span class="terminal-code">CTF_SEARCH</span>
+                    <span class="material-symbols-outlined">travel_explore</span>
+                </button>
+            </div>
+
+            <!-- Active Threads -->
+            <div class="sidebar-section thread-section">
+                <h3 class="section-title">ACTIVE_THREADS</h3>
+                <div class="thread-list" id="threadList">
+                    <div class="thread-item">
+                        <span>&gt; Thread_MAIN</span>
+                        <span class="status-active">IDLE</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Central Canvas -->
+        <main class="chat-main">
+            <!-- TERML TAB (Chat) -->
+            <div id="tab-terml" class="tab-content active">
+                <div class="chat-panel glitch-border">
+                    <!-- Panel Header -->
+                    <div class="panel-header">
+                        <span class="label-caps accent-primary-bright">NEURAL_TERMINAL</span>
+                        <div class="panel-dots">
+                            <span class="dot-pulse"></span>
+                            <span class="dot-pulse" style="animation-delay: 200ms;"></span>
+                            <span class="dot-pulse" style="animation-delay: 400ms;"></span>
+                        </div>
+                    </div>
+
+                    <!-- Chat Messages Area -->
+                    <div class="chat-messages" id="chatContainer">
+                        <div class="message system-msg">
+                            <div class="msg-content">
+                                [SYSTEM] Initialization complete. Agent ready for CTF operations.<br/>
+                                Model: dolphin-llama3 | Tools: 8 loaded | RAG: standby
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Input Area -->
+                    <div class="chat-input-area">
+                        <form id="chatForm">
+                            <div class="input-wrapper">
+                                <span class="material-symbols-outlined input-icon">chevron_right</span>
+                                <input type="text" id="userInput" autocomplete="off" placeholder="Enter command or query..." autofocus/>
+                            </div>
+                            <button type="submit" class="execute-btn" id="sendBtn">
+                                <span class="material-symbols-outlined">send</span>
+                                EXECUTE
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LOGS TAB (Real-time Terminal) -->
+            <div id="tab-logs" class="tab-content">
+                <div class="terminal-panel glitch-border">
+                    <div class="panel-header">
+                        <span class="label-caps accent-secondary">SYS_LOGS // STDOUT</span>
+                        <div class="panel-dots">
+                            <span class="dot-pulse"></span>
+                        </div>
+                    </div>
+                    <div class="terminal-output" id="terminalOutput">
+                        <div class="term-line sys-msg">Initializing SSE connection...</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Other Tabs Placeholders -->
+            <div id="tab-intel" class="tab-content">
+                <div class="placeholder-panel">INTEL / KNOWLEDGE BASE</div>
+            </div>
+            <div id="tab-stealth" class="tab-content">
+                <div class="placeholder-panel">STEALTH PROTOCOLS (Under Construction)</div>
+            </div>
+            <div id="tab-diags" class="tab-content">
+                <div class="placeholder-panel">SYSTEM DIAGNOSTICS (Under Construction)</div>
+            </div>
+        </main>
+
+        <!-- Right Panel: Metrics -->
+        <aside class="metrics-panel" id="metricsPanel">
+            <!-- Agent Metrics -->
+            <div class="metrics-card">
+                <h3 class="section-title">AGENT_METRICS</h3>
+                <div class="metric-row">
+                    <span class="metric-label">MODEL_STATUS</span>
+                    <span class="metric-value accent-primary-bright" id="modelStatus">READY</span>
+                </div>
+                <div class="metric-bar-track">
+                    <div class="metric-bar-fill primary-bar" id="modelBar" style="width: 100%;"></div>
+                </div>
+                <div class="metric-row">
+                    <span class="metric-label">ITERATIONS</span>
+                    <span class="metric-value accent-secondary" id="iterationCount">0 / 15</span>
+                </div>
+                <div class="metric-bar-track">
+                    <div class="metric-bar-fill secondary-bar" id="iterBar" style="width: 0%;"></div>
+                </div>
+            </div>
+
+            <!-- Active Tools -->
+            <div class="metrics-card node-card">
+                <h3 class="section-title">TOOL_ACTIVITY</h3>
+                <div class="node-list" id="toolActivity">
+                    <div class="node-item">
+                        <span class="material-symbols-outlined node-icon primary-icon">terminal</span>
+                        <div class="node-info">
+                            <div class="node-name">TERMINAL</div>
+                            <div class="node-detail">subprocess</div>
+                        </div>
+                        <span class="node-status status-online">STANDBY</span>
+                    </div>
+                    <div class="node-item">
+                        <span class="material-symbols-outlined node-icon secondary-icon">radar</span>
+                        <div class="node-info">
+                            <div class="node-name">NMAP</div>
+                            <div class="node-detail">python-nmap</div>
+                        </div>
+                        <span class="node-status status-online">STANDBY</span>
+                    </div>
+                    <div class="node-item">
+                        <span class="material-symbols-outlined node-icon primary-icon">lan</span>
+                        <div class="node-info">
+                            <div class="node-name">PCAP</div>
+                            <div class="node-detail">pyshark</div>
+                        </div>
+                        <span class="node-status status-online">STANDBY</span>
+                    </div>
+                    <div class="node-item">
+                        <span class="material-symbols-outlined node-icon secondary-icon">auto_fix_high</span>
+                        <div class="node-info">
+                            <div class="node-name">CYBERCHEF</div>
+                            <div class="node-detail">chepy</div>
+                        </div>
+                        <span class="node-status status-online">STANDBY</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Mobile Bottom Nav -->
+    <nav class="mobile-nav">
+        <a href="#" class="mobile-link active"><span class="material-symbols-outlined">dashboard</span>TERML</a>
+        <a href="#" class="mobile-link"><span class="material-symbols-outlined">radar</span>INTEL</a>
+        <a href="#" class="mobile-link"><span class="material-symbols-outlined">visibility_off</span>STLTH</a>
+        <a href="#" class="mobile-link"><span class="material-symbols-outlined">monitoring</span>DIAGS</a>
+        <a href="#" class="mobile-link"><span class="material-symbols-outlined">history</span>LOGS</a>
+    </nav>
+
+    <script src="script.js"></script>
+</body>
+</html>

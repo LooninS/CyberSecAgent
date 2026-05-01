@@ -1,0 +1,12 @@
+langchain
+langchain-community
+chromadb
+pyshark
+python-nmap
+sentence-transformers
+chepy
+requests
+duckduckgo-search
+bs4
+fastapi
+uvicorn
