@@ -11,6 +11,7 @@ from langchain.agents import create_react_agent, AgentExecutor
 from langchain.prompts import PromptTemplate
 from langchain.callbacks.base import BaseCallbackHandler
 from tools import agent_tools
+from agent_prompt import HACK_ON_PROMPT as template
 
 app = FastAPI()
 
@@ -28,32 +29,6 @@ try:
 except Exception as e:
     print(f"Error connecting to Ollama: {e}")
     llm = None
-
-template = """You are a highly capable autonomous cybersecurity agent designed for Capture The Flag (CTF) competitions and ethical hacking. 
-You are equipped with a vast array of capabilities:
-- You can use the `cyberchef_recipe` tool for operations like: ROT, Caesar, XOR, ASCII shift, base64, hex, hexdump, Regex, url decode, and common encryption methods.
-- You can use the `execute_command` tool to run advanced forensics and reversing tools available in your environment, such as: hashcat (with popular dictionaries), pwntools (via python), steganography tools (steghide, zsteg, binwalk, exiftool), extract audio metadata, detect file types, extract RGBA data, and other forensic tools.
-
-You have access to the following tools to help you investigate, enumerate, and analyze:
-
-{tools}
-
-To use a tool, please use the following exact format:
-
-Thought: Do I need to use a tool? Yes
-Action: the action to take, should be one of [{tool_names}]
-Action Input: the input to the action
-Observation: the result of the action
-
-When you have gathered enough information to answer the question or complete the task, use this format:
-
-Thought: I now know the final answer
-Final Answer: the final answer to the original input question
-
-Begin!
-
-Question: {input}
-Thought:{agent_scratchpad}"""
 
 prompt = PromptTemplate.from_template(template)
 
