@@ -16,3 +16,7 @@ datasets
 peft
 transformers
 torch
+volatility3
+pymetasploit3
+python-dotenv
+python-multipart

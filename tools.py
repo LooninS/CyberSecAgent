@@ -8,11 +8,10 @@ from langchain_community.embeddings import OllamaEmbeddings
 from langchain_community.vectorstores import Chroma
 from langchain_community.tools import DuckDuckGoSearchRun
 from chepy import Chepy
+import json
 
 @tool
-def execute_comm
-￼Review Changes
-and(command: str) -> str:
+def execute_command(command: str) -> str:
     """Execute a local shell command and return the output. Useful for recon, reading files, etc."""
     try:
         result = subprocess.run(command, shell=True, capture_output=True, text=True, timeout=60)
@@ -137,6 +136,64 @@ def search_ctf_writeups(query: str) -> str:
     except Exception as e:
         return f"Error searching: {str(e)}"
 
+@tool
+def analyze_memory(dump_file: str, plugin: str) -> str:
+    """Run a Volatility 3 plugin on a memory dump file. 
+    Examples of plugin: windows.info.Info, windows.pslist.PsList.
+    """
+    try:
+        result = subprocess.run(f"vol -f {dump_file} {plugin}", shell=True, capture_output=True, text=True)
+        out = result.stdout
+        if len(out) > 2000:
+            out = out[:2000] + "\n... [TRUNCATED]"
+        return out if out else f"Error or no output: {result.stderr}"
+    except Exception as e:
+        return f"Error analyzing memory: {str(e)}"
+
+@tool
+def analyze_binary_ghidra(binary_path: str, script_name: str) -> str:
+    """Run a headless Ghidra analysis using a specified script.
+    Assumes `analyzeHeadless` is in the system PATH.
+    """
+    try:
+        cmd = f"analyzeHeadless /tmp GhidraProject -import {binary_path} -postScript {script_name} -deleteProject"
+        result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+        out = result.stdout
+        if len(out) > 2000:
+            out = out[:2000] + "\n... [TRUNCATED]"
+        return out
+    except Exception as e:
+        return f"Error running Ghidra headless: {str(e)}"
+
+@tool
+def run_metasploit_module(module_type: str, module_name: str, options_json: str) -> str:
+    """Connects to a local Metasploit RPC server to run an exploit or auxiliary module.
+    Requires msfrpcd running (e.g. `msfrpcd -P msf -n -f -a 127.0.0.1`).
+    Provide module_type ('exploit' or 'auxiliary'), module_name, and options_json as a JSON string for module options (like RHOSTS, LHOST).
+    """
+    try:
+        from pymetasploit3.msfrpc import MsfRpcClient
+        from dotenv import load_dotenv
+        import os
+        load_dotenv()
+        
+        msf_user = os.getenv('MSF_USER', 'msf')
+        msf_pass = os.getenv('MSF_PASS', 'msf')
+        msf_port = int(os.getenv('MSF_PORT', 55553))
+
+        client = MsfRpcClient(msf_pass, username=msf_user, port=msf_port, ssl=False)
+        module = client.modules.use(module_type, module_name)
+        options = json.loads(options_json)
+        for key, val in options.items():
+            module[key] = val
+        if module_type == 'exploit':
+            result = module.execute(payload='cmd/unix/interact')
+        else:
+            result = module.execute()
+        return f"Module executed: {result}"
+    except Exception as e:
+        return f"Error executing Metasploit module: {str(e)}"
+
 # List of tools to pass to the LangChain agent
 agent_tools = [
     execute_command, 
@@ -146,5 +203,8 @@ agent_tools = [
     analyze_image,
     aperisolve_scan,
     cyberchef_recipe,
-    search_ctf_writeups
+    search_ctf_writeups,
+    analyze_memory,
+    analyze_binary_ghidra,
+    run_metasploit_module
 ]

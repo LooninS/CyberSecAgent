@@ -7,6 +7,9 @@ RUN apt-get update && apt-get install -y \
     binwalk \
     binutils \
     curl \
+    wget \
+    unzip \
+    default-jre \
     hashcat \
     john \
     steghide \
@@ -15,8 +18,20 @@ RUN apt-get update && apt-get install -y \
     ltrace \
     jq \
     smbclient \
+    gnupg2 \
     && rm -rf /var/lib/apt/lists/*
 
+# Install Ghidra
+RUN wget -q https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_11.0.3_build/ghidra_11.0.3_PUBLIC_20240410.zip -O /tmp/ghidra.zip && \
+    unzip -q /tmp/ghidra.zip -d /opt/ && \
+    rm /tmp/ghidra.zip && \
+    ln -s /opt/ghidra_11.0.3_PUBLIC/support/analyzeHeadless /usr/local/bin/analyzeHeadless
+
+# Install Metasploit Framework
+RUN curl https://raw.githubusercontent.com/rapid7/metasploit-omnibus/master/config/templates/metasploit-framework-wrappers/msfupdate.erb > msfinstall && \
+    chmod 755 msfinstall && \
+    ./msfinstall && \
+    rm msfinstall
 WORKDIR /app
 
 COPY requirements.txt .

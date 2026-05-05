@@ -83,6 +83,39 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
+    // File upload logic
+    const fileUpload = document.getElementById('fileUpload');
+    if (fileUpload) {
+        fileUpload.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            appendMessage('system', `[SYS] Uploading ${file.name}...`);
+
+            try {
+                const response = await fetch('/api/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (!response.ok) throw new Error("Upload failed");
+                const data = await response.json();
+                
+                appendMessage('system', `[SYS] File uploaded successfully to ${data.path}`);
+                userInput.value += `I uploaded a file to ${data.path}. `;
+                userInput.focus();
+            } catch (error) {
+                console.error('Error:', error);
+                appendMessage('system', `[ERROR] File upload failed: ${error.message}`);
+            }
+            
+            fileUpload.value = ''; // Reset
+        });
+    }
+
     chatForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const text = userInput.value.trim();

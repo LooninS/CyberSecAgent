@@ -1,8 +1,9 @@
 import os
 import asyncio
 import json
+import shutil
 from typing import AsyncIterable, Any, Dict, List
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, UploadFile, File
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, StreamingResponse
 from pydantic import BaseModel
@@ -10,6 +11,9 @@ from langchain_community.llms import Ollama
 from langchain.agents import create_react_agent, AgentExecutor
 from langchain.prompts import PromptTemplate
 from langchain.callbacks.base import BaseCallbackHandler
+
+os.makedirs("uploads", exist_ok=True)
+
 from tools import agent_tools
 from agent_prompt import HACK_ON_PROMPT as template
 
@@ -116,6 +120,13 @@ async def stream_logs(request: Request):
             clients.remove(queue)
 
     return StreamingResponse(event_generator(), media_type="text/event-stream")
+
+@app.post("/api/upload")
+async def upload_file(file: UploadFile = File(...)):
+    file_path = f"uploads/{file.filename}"
+    with open(file_path, "wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+    return {"filename": file.filename, "path": file_path, "message": "File uploaded successfully"}
 
 if __name__ == "__main__":
     import uvicorn

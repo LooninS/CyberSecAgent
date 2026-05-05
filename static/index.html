@@ -121,6 +121,10 @@
                             <div class="input-wrapper">
                                 <span class="material-symbols-outlined input-icon">chevron_right</span>
                                 <input type="text" id="userInput" autocomplete="off" placeholder="Enter command or query..." autofocus/>
+                                <label for="fileUpload" class="upload-btn" style="cursor: pointer; padding: 0 10px; display: flex; align-items: center; color: var(--text-dim); transition: color 0.2s;">
+                                    <span class="material-symbols-outlined hover-bright">attach_file</span>
+                                </label>
+                                <input type="file" id="fileUpload" style="display: none;"/>
                             </div>
                             <button type="submit" class="execute-btn" id="sendBtn">
                                 <span class="material-symbols-outlined">send</span>
